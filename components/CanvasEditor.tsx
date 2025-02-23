@@ -2,24 +2,33 @@
 
 import { useEffect, useRef, useState } from "react";
 import * as fabric from "fabric";
-import { useCartStore } from "@/store/cartStore";
-import { v4 as uuidv4 } from "uuid";
 
-const CanvasEditor = () => {
+const CanvasEditor = ({
+  onSave,
+  onClose,
+  canvasRef: externalCanvasRef, //Optional external canvas ref
+}: {
+  onSave?: (imageData: string) => void;
+  onClose?: () => void;
+  canvasRef?: React.MutableRefObject<fabric.Canvas | null>;
+}) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [canvas, setCanvas] = useState<fabric.Canvas | null>(null);
-  const addItem = useCartStore((state) => state.addItem);
 
   useEffect(() => {
     if (!canvasRef.current) return;
 
     const newCanvas = new fabric.Canvas(canvasRef.current, {
-      width: 800,
-      height: 600,
+      width: 600,
+      height: 400,
       backgroundColor: "#f3f3f3",
     });
 
     setCanvas(newCanvas);
+
+    if (externalCanvasRef) {
+      externalCanvasRef.current = newCanvas;
+    }
 
     const handleImageUpload = (e: Event) => {
       const target = e.target as HTMLInputElement;
@@ -34,37 +43,27 @@ const CanvasEditor = () => {
       reader.onload = (f) => {
         const base64Image = f.target?.result as string;
 
-        // Create HTMLImageElement
         const imgElement = new Image();
         imgElement.src = base64Image;
 
         imgElement.onload = () => {
-          // Create fabric.Image from HTMLImageElement
           const fabricImage = new fabric.Image(imgElement, {
-            left: 50,
-            top: 50,
+            left: 100,
+            top: 100,
             scaleX: 0.5,
             scaleY: 0.5,
+            selectable: true,
           });
 
           newCanvas.add(fabricImage);
           newCanvas.setActiveObject(fabricImage);
           newCanvas.renderAll();
         };
-
-        imgElement.onerror = (err) => {
-          console.error("Error loading image:", err);
-        };
-      };
-
-      reader.onerror = (error) => {
-        console.error("Error reading file:", error);
       };
 
       reader.readAsDataURL(file);
     };
 
-    // Attach Event Listener to File Input
     const fileInput = document.getElementById("image-upload");
     fileInput?.addEventListener("change", handleImageUpload);
 
@@ -73,17 +72,27 @@ const CanvasEditor = () => {
     };
   }, []);
 
-  const handleAddToCart = () => {
-    if (!canvas) return;
+  const handleSave = () => {
+    const activeCanvas = externalCanvasRef?.current || canvas;
+    if (!activeCanvas) {
+      console.log("No canvas available for saving.");
+      return;
+    }
 
-    const imageData = canvas.toDataURL();
+    const imageData = activeCanvas.toDataURL();
+    if (onSave) {
+      onSave(imageData);
+    } else {
+      console.log("Save action triggered but no onSave handler provided.");
+    }
+  };
 
-    addItem({
-      id: uuidv4(), // Unique ID for the cart item
-      imageData,
-    });
-
-    alert("Item added to cart!");
+  const handleClose = () => {
+    if (onClose) {
+      onClose();
+    } else {
+      console.log("Close action triggered but no onClose handler provided.");
+    }
   };
 
   return (
@@ -94,12 +103,27 @@ const CanvasEditor = () => {
         <canvas ref={canvasRef} className="rounded-md" />
       </div>
 
-      <button
-        onClick={handleAddToCart}
-        className="mt-4 px-6 py-2 bg-blue-600 text-white rounded"
-      >
-        Add to Cart
-      </button>
+      {/* Conditionally render Save/Cancel buttons if handlers are provided */}
+      {(onSave || onClose) && (
+        <div className="flex gap-4 mt-4">
+          {onSave && (
+            <button
+              onClick={handleSave}
+              className="px-6 py-2 bg-green-600 text-white rounded"
+            >
+              Save
+            </button>
+          )}
+          {onClose && (
+            <button
+              onClick={handleClose}
+              className="px-6 py-2 bg-red-600 text-white rounded"
+            >
+              Cancel
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 };

@@ -20,15 +20,15 @@ const CartPage = () => {
   const [imageURLs, setImageURLs] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
-    // Convert Base64 to Blob URLs for display
     const urls: { [key: string]: string } = {};
     items.forEach((item) => {
-      const blob = base64ToBlob(item.imageData);
-      urls[item.id] = URL.createObjectURL(blob);
+      if (item.type === "single" && item.imageData) {
+        const blob = base64ToBlob(item.imageData);
+        urls[item.id] = URL.createObjectURL(blob);
+      }
     });
     setImageURLs(urls);
 
-    // Cleanup Blob URLs when component unmounts
     return () => {
       Object.values(urls).forEach((url) => URL.revokeObjectURL(url));
     };
@@ -48,18 +48,53 @@ const CartPage = () => {
                 key={item.id}
                 className="border rounded-lg p-4 shadow-md relative"
               >
-                {imageURLs[item.id] ? (
-                  <Image
-                    src={imageURLs[item.id]}
-                    alt="Customized Product"
-                    className="w-full h-48 object-contain"
-                    width={300}
-                    height={200}
-                    style={{ objectFit: "contain" }}
-                  />
+                {item.type === "single" && item.imageData ? (
+                  imageURLs[item.id] ? (
+                    <Image
+                      src={imageURLs[item.id]}
+                      alt="Customized Product"
+                      className="w-full h-48 object-contain"
+                      width={300}
+                      height={200}
+                      style={{ objectFit: "contain" }}
+                    />
+                  ) : (
+                    <p>Loading image...</p>
+                  )
                 ) : (
-                  <p>Loading image...</p>
+                  <div>
+                    <h2 className="text-lg font-semibold mb-2">Photo Album</h2>
+                    <div className="grid grid-cols-2 gap-2">
+                      {item.albumData?.pages.map((page, idx) => (
+                        <div key={page.id}>
+                          <h3 className="text-sm font-semibold">
+                            Page {idx + 1}
+                          </h3>
+                          <div className="grid grid-cols-2 gap-1">
+                            {page.imageSlots.map((slot) =>
+                              slot.imageData ? (
+                                <img
+                                  key={slot.id}
+                                  src={slot.imageData}
+                                  alt="Album Image"
+                                  className="w-20 h-20 object-cover"
+                                />
+                              ) : (
+                                <div
+                                  key={slot.id}
+                                  className="w-20 h-20 border-2 border-dashed flex items-center justify-center text-gray-400"
+                                >
+                                  Empty
+                                </div>
+                              )
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 )}
+
                 <button
                   onClick={() => removeItem(item.id)}
                   className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded"

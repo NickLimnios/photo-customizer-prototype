@@ -1,6 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { useAlbumStore } from "@/store/albumStore";
+import CanvasEditor from "@/components/CanvasEditor";
+import { exportAlbumAsPDF, exportAlbumAsZIP } from "@/utils/exportAlbum";
+import { useCartStore } from "@/store/cartStore";
+import { v4 as uuidv4 } from "uuid";
 
 const AlbumEditor = () => {
   const {
@@ -13,32 +18,63 @@ const AlbumEditor = () => {
     addImageToSlot,
   } = useAlbumStore();
 
+  const [editingSlotId, setEditingSlotId] = useState<string | null>(null);
+
   const currentPage = pages[currentPageIndex];
 
   const handleImageUpload = (slotId: string) => {
-    const fileInput = document.createElement("input");
-    fileInput.type = "file";
-    fileInput.accept = "image/*";
+    setEditingSlotId(slotId); // Open CanvasEditor for this slot
+  };
 
-    fileInput.onchange = (e: Event) => {
-      const target = e.target as HTMLInputElement;
-      const file = target.files?.[0];
-      if (!file) return;
+  const handleSaveEditedImage = (imageData: string) => {
+    if (editingSlotId) {
+      addImageToSlot(currentPage.id, editingSlotId, imageData);
+      setEditingSlotId(null); // Close CanvasEditor after saving
+    }
+  };
 
-      const reader = new FileReader();
-      reader.onload = (f) => {
-        const imageData = f.target?.result as string;
-        addImageToSlot(currentPage.id, slotId, imageData);
-      };
-      reader.readAsDataURL(file);
-    };
+  const addItem = useCartStore((state) => state.addItem);
 
-    fileInput.click();
+  const handleAddAlbumToCart = () => {
+    const albumId = uuidv4();
+
+    addItem({
+      id: albumId,
+      type: "album",
+      albumData: {
+        pages,
+      },
+    });
+
+    alert("Album added to cart!");
   };
 
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Photo Album Editor</h1>
+
+      <div className="mb-6 flex gap-4">
+        <button
+          onClick={() => exportAlbumAsPDF(pages)}
+          className="px-4 py-2 bg-blue-600 text-white rounded"
+        >
+          Export as PDF
+        </button>
+
+        <button
+          onClick={() => exportAlbumAsZIP(pages)}
+          className="px-4 py-2 bg-purple-600 text-white rounded"
+        >
+          Export as ZIP
+        </button>
+
+        <button
+          onClick={handleAddAlbumToCart}
+          className="px-6 py-2 bg-green-600 text-white rounded"
+        >
+          Add Album to Cart
+        </button>
+      </div>
 
       <div className="mb-4">
         <button
@@ -78,7 +114,7 @@ const AlbumEditor = () => {
           {currentPage.imageSlots.map((slot) => (
             <div
               key={slot.id}
-              className="w-80 h-80 border-2 border-dashed flex items-center justify-center relative"
+              className="w-80 h-80 border-2 border-dashed flex items-center justify-center relative cursor-pointer"
               onClick={() => handleImageUpload(slot.id)}
             >
               {slot.imageData ? (
@@ -88,7 +124,7 @@ const AlbumEditor = () => {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <span className="text-gray-400">Click to Add Image</span>
+                <span className="text-gray-400">Click to Add/Edit Image</span>
               )}
             </div>
           ))}
@@ -113,6 +149,18 @@ const AlbumEditor = () => {
           Remove Page
         </button>
       </div>
+
+      {/* CanvasEditor Modal */}
+      {editingSlotId && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <CanvasEditor
+              onSave={handleSaveEditedImage}
+              onClose={() => setEditingSlotId(null)}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
