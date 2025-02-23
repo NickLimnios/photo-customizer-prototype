@@ -2,7 +2,11 @@ import { create } from "zustand";
 
 interface CartItem {
   id: string;
-  imageData: string;
+  type: "single" | "album"; // New field to differentiate item types
+  imageData?: string; // For single image items
+  albumData?: {
+    pages: { id: string; imageSlots: { id: string; imageData?: string }[] }[];
+  }; // For albums
 }
 
 interface CartState {

@@ -41,14 +41,50 @@ const CheckoutPage = () => {
                 key={item.id}
                 className="border rounded-lg p-4 shadow-md relative"
               >
-                <Image
-                  src={item.imageData}
-                  alt="Customized Product"
-                  className="w-full h-48 object-contain"
-                  width={300}
-                  height={200}
-                  style={{ objectFit: "contain" }}
-                />
+                {item.type === "single" && item.imageData ? (
+                  <Image
+                    src={item.imageData}
+                    alt="Customized Product"
+                    className="w-full h-48 object-contain"
+                    width={300}
+                    height={200}
+                    style={{ objectFit: "contain" }}
+                  />
+                ) : item.type === "album" && item.albumData ? (
+                  <div>
+                    <h2 className="text-lg font-semibold mb-2">Photo Album</h2>
+                    <div className="grid grid-cols-2 gap-2">
+                      {item.albumData.pages.map((page, pageIndex) => (
+                        <div key={page.id} className="border p-2">
+                          <h3 className="text-sm font-semibold">
+                            Page {pageIndex + 1}
+                          </h3>
+                          <div className="grid grid-cols-2 gap-1">
+                            {page.imageSlots.map((slot) =>
+                              slot.imageData ? (
+                                <img
+                                  key={slot.id}
+                                  src={slot.imageData}
+                                  alt="Album Image"
+                                  className="w-20 h-20 object-cover"
+                                />
+                              ) : (
+                                <div
+                                  key={slot.id}
+                                  className="w-20 h-20 border-2 border-dashed flex items-center justify-center text-gray-400"
+                                >
+                                  Empty
+                                </div>
+                              )
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <p>No data available.</p>
+                )}
               </div>
             ))}
           </div>
