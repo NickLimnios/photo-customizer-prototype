@@ -1,4 +1,4 @@
-import CreativeEditorSDKComponent from "../components/CreativeEditorSDKComponent";
+import CreativeEditorSDKComponent from "../components/PhotobookEditor/CreativeEditorSDKComponent";
 
 const EditorPage = () => {
   return (
