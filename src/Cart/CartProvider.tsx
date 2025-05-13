@@ -1,6 +1,6 @@
 import { useReducer } from "react";
-import CartContext, { CartState, Action } from "./CartContext";
 import { ReactNode } from "react";
+import CartContext, { Action, CartState } from "./CartContext";
 
 const initialState: CartState = {
   items: [],

@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { useCart } from "../../context/useCart";
+import { useCart } from "../Cart/useCart";
 
 export function PhotobookEditorMock() {
   const { dispatch } = useCart();

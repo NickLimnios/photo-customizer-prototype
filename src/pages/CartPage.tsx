@@ -1,6 +1,6 @@
-import { useCart } from "../../context/useCart";
+import { useCart } from "../Cart/useCart";
 
-export function Cart() {
+const CartPage = () => {
   const { state, dispatch } = useCart();
 
   return (
@@ -45,4 +45,6 @@ export function Cart() {
       )}
     </div>
   );
-}
+};
+
+export default CartPage;

@@ -1,30 +1,29 @@
-// src/components/SignIn.tsx
 import React, { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/firebase";
 
-const SignIn: React.FC = () => {
+const SignUp: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSignIn = async (e: React.FormEvent) => {
+  const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const userCredential = await signInWithEmailAndPassword(
+      const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
-      // Signed in successfully
+      // Signed up successfully
       const user = userCredential.user;
-      console.log("User signed in:", user);
+      console.log("User signed up:", user);
     } catch (error) {
-      console.error("Error signing in:", error);
+      console.error("Error signing up:", error);
     }
   };
 
   return (
-    <form onSubmit={handleSignIn} className="flex flex-col space-y-4">
+    <form onSubmit={handleSignUp} className="flex flex-col space-y-4">
       <input
         type="email"
         placeholder="Email"
@@ -39,11 +38,11 @@ const SignIn: React.FC = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <button type="submit" className="bg-green-500 text-white p-2 rounded">
-        Sign In
+      <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+        Sign Up
       </button>
     </form>
   );
 };
 
-export default SignIn;
+export default SignUp;
