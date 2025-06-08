@@ -6,7 +6,7 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
+      <div className="bg-white p-4 tablet:p-8 rounded shadow-md w-full max-w-sm tablet:max-w-md">
         <h2 className="text-2xl font-bold mb-6 text-center">
           {isSignIn ? "Sign In to Photobook" : "Create a Photobook Account"}
         </h2>

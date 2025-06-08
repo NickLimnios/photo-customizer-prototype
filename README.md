@@ -1,6 +1,8 @@
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+It includes a mobile‑first layout powered by Tailwind CSS with responsive
+styles for mobile, tablet and desktop screens.
 
 Currently, two official plugins are available:
 
