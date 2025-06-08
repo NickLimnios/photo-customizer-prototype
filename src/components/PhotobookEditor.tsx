@@ -14,13 +14,48 @@ type UploadedImage = {
 
 export default function PhotobookEditor() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const [canvas, setCanvas] = useState<Canvas>();
-  const [layout, setLayout] = useState<LayoutOption>("one-placeholder");
-  const [images, setImages] = useState<UploadedImage[]>([]);
-  const [placeholders, setPlaceholders] = useState<Rect[]>([]);
-
-  useEffect(() => {
+    const createRect = (
+      left: number,
+      top: number,
+      width: number,
+      height: number,
+    ) => {
+        createRect(
+          gap * 2 + (w - 3 * gap) / 2,
+          gap,
+          (w - 3 * gap) / 2,
+          h - 2 * gap,
+        );
+        createRect(
+          gap * 2 + (w - 3 * gap) / 2,
+          gap,
+          (w - 3 * gap) / 2,
+          (h - 3 * gap) / 2,
+        );
+        createRect(
+          gap,
+          gap * 2 + (h - 3 * gap) / 2,
+          w - 2 * gap,
+          (h - 3 * gap) / 2,
+        );
+        createRect(
+          gap * 2 + (w - 3 * gap) / 2,
+          gap,
+          (w - 3 * gap) / 2,
+          (h - 3 * gap) / 2,
+        );
+        createRect(
+          gap,
+          gap * 2 + (h - 3 * gap) / 2,
+          (w - 3 * gap) / 2,
+          (h - 3 * gap) / 2,
+        );
+        createRect(
+          gap * 2 + (w - 3 * gap) / 2,
+          gap * 2 + (h - 3 * gap) / 2,
+          (w - 3 * gap) / 2,
+          (h - 3 * gap) / 2,
+        );
     if (canvasRef.current && !canvas) {
       const c = new Canvas(canvasRef.current, {
         width: 600,
@@ -110,8 +145,16 @@ export default function PhotobookEditor() {
     const target = placeholders.find((ph) => {
       const bounds = ph.getBoundingRect();
       return (
-        dropX >= bounds.left &&
-        dropX <= bounds.left + bounds.width &&
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => e.target.files && handleAddImage(e.target.files[0])}
+        />
+        <select
+          value={layout}
+          onChange={(e) => setLayout(e.target.value as LayoutOption)}
+          className="border p-1"
+        >
         dropY >= bounds.top &&
         dropY <= bounds.top + bounds.height
       );
