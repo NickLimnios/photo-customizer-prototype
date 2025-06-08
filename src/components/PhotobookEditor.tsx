@@ -137,7 +137,7 @@ export default function PhotobookEditor() {
       return;
     }
 
-    FabricImage.fromURL(img.url, {}, (image: FabricImage) => {
+    FabricImage.fromURL(img.url).then((image: FabricImage) => {
       if (!image) {
         console.error("Image could not be loaded");
         return;
