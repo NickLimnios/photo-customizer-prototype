@@ -22,6 +22,11 @@ export default function PhotobookEditor() {
   const [layout, setLayout] = useState<LayoutOption>("one-placeholder");
   const [images, setImages] = useState<UploadedImage[]>([]);
   const [placeholders, setPlaceholders] = useState<Rect[]>([]);
+  const [uploadStatus, setUploadStatus] = useState({
+    total: 0,
+    current: 0,
+    visible: false,
+  });
 
   useEffect(() => {
     const updateSize = () => {
@@ -119,19 +124,32 @@ export default function PhotobookEditor() {
     canvas.renderAll();
   }, [canvas, layout, size]);
 
-  const handleAddImage = (file: File) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const url = reader.result as string;
-      const id = crypto.randomUUID();
-      setImages((prev) => [...prev, { id, url }]);
-    };
-    reader.readAsDataURL(file);
+  const handleAddImages = (files: FileList) => {
+    const total = files.length;
+    if (total === 0) return;
+    setUploadStatus({ total, current: 0, visible: true });
+
+    Array.from(files).forEach((file, index) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const url = reader.result as string;
+        const id = crypto.randomUUID();
+        setImages((prev) => [...prev, { id, url }]);
+        setUploadStatus((prev) => ({ ...prev, current: prev.current + 1 }));
+
+        if (index === total - 1) {
+          setTimeout(
+            () => setUploadStatus({ total: 0, current: 0, visible: false }),
+            300
+          );
+        }
+      };
+      reader.readAsDataURL(file);
+    });
   };
 
   const onDragStart = (e: React.DragEvent<HTMLImageElement>, id: string) => {
     e.dataTransfer.setData("text/plain", id);
-    console.log("Drag start:", id);
   };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
@@ -155,7 +173,6 @@ export default function PhotobookEditor() {
     });
 
     if (!target) {
-      console.log("No placeholder under drop point");
       return;
     }
 
@@ -188,22 +205,23 @@ export default function PhotobookEditor() {
   };
 
   return (
-    <div className="space-y-4 p-4">
-      <div className="flex flex-wrap gap-2 items-center">
-        <label className="cursor-pointer inline-flex items-center bg-accent-bluegray text-white rounded px-4 py-2 shadow hover:bg-accent-bluegray/80">
+    <div className="flex flex-col tablet:flex-row h-full p-4 gap-4">
+      <div className="tablet:w-64 w-full space-y-4">
+        <label className="cursor-pointer flex items-center justify-center bg-accent-bluegray text-white rounded px-4 py-2 shadow hover:bg-accent-bluegray/80">
           <input
             type="file"
             accept="image/*"
-            onChange={(e) => e.target.files && handleAddImage(e.target.files[0])}
+            multiple
+            onChange={(e) => e.target.files && handleAddImages(e.target.files)}
             className="hidden"
           />
-          Upload Image
+          Upload Images
         </label>
         <div className="relative inline-block">
           <select
             value={layout}
             onChange={(e) => setLayout(e.target.value as LayoutOption)}
-            className="appearance-none border rounded px-3 py-2 pr-8 bg-surface shadow focus:outline-none focus:ring-2 focus:ring-accent-bluegray"
+            className="appearance-none border rounded px-3 py-2 pr-8 bg-surface shadow focus:outline-none focus:ring-2 focus:ring-accent-bluegray w-full"
           >
             <option value="one-placeholder">One Placeholder</option>
             <option value="two-placeholders">Two Placeholders</option>
@@ -213,28 +231,37 @@ export default function PhotobookEditor() {
           </select>
           <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 text-text-secondary" />
         </div>
+
+        <div className="grid grid-cols-3 gap-2 max-h-64 overflow-y-auto">
+          {images.map((img) => (
+            <img
+              key={img.id}
+              src={img.url}
+              draggable
+              onDragStart={(e) => onDragStart(e, img.id)}
+              className="w-full h-24 object-cover border rounded cursor-move"
+            />
+          ))}
+        </div>
       </div>
 
-      <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 max-h-32 overflow-y-auto">
-        {images.map((img) => (
-          <img
-            key={img.id}
-            src={img.url}
-            draggable
-            onDragStart={(e) => onDragStart(e, img.id)}
-            className="w-full h-24 object-cover border rounded cursor-move"
-          />
-        ))}
+      <div className="flex-1 flex items-center justify-center">
+        <div
+          ref={containerRef}
+          className="border relative w-full h-full"
+          onDrop={handleDrop}
+          onDragOver={(e) => e.preventDefault()}
+        >
+          <canvas ref={canvasRef} className="pointer-events-auto w-full h-full" tabIndex={0} />
+        </div>
       </div>
-
-      <div
-        ref={containerRef}
-        className="border inline-block relative w-full"
-        onDrop={handleDrop}
-        onDragOver={(e) => e.preventDefault()}
-      >
-        <canvas ref={canvasRef} className="pointer-events-auto w-full h-full" tabIndex={0} />
-      </div>
+      {uploadStatus.visible && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded px-4 py-3 shadow">
+            Uploading {uploadStatus.current} / {uploadStatus.total}...
+          </div>
+        </div>
+      )}
     </div>
   );
 }
