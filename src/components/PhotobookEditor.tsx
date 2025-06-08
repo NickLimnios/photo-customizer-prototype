@@ -205,8 +205,8 @@ export default function PhotobookEditor() {
   };
 
   return (
-    <div className="flex flex-col tablet:flex-row h-full p-4 gap-4">
-      <div className="tablet:w-64 w-full space-y-4">
+    <div className="flex h-full p-4 gap-4">
+      <div className="w-48 tablet:w-64 space-y-4">
         <label className="cursor-pointer flex items-center justify-center bg-accent-bluegray text-white rounded px-4 py-2 shadow hover:bg-accent-bluegray/80">
           <input
             type="file"
@@ -232,7 +232,7 @@ export default function PhotobookEditor() {
           <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 text-text-secondary" />
         </div>
 
-        <div className="grid grid-cols-3 gap-2 max-h-64 overflow-y-auto">
+        <div className="grid grid-cols-2 tablet:grid-cols-3 gap-2 max-h-64 overflow-y-auto">
           {images.map((img) => (
             <img
               key={img.id}
