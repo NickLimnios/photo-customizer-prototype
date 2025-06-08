@@ -5,6 +5,11 @@ import { CartButton } from "../Cart/CartButton";
 import { LoginButton } from "../Auth/LoginButton";
 import { useAuth } from "../Auth/AuthContext";
 
+const links = [
+  { label: "Home", to: "/" },
+  { label: "Create", to: "/editor" },
+];
+
 const Header = () => {
   const { user } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -17,7 +22,12 @@ const Header = () => {
         </Link>
         <div className="ml-auto flex items-center">
           <CartButton />
-          <div className="hidden tablet:flex items-center space-x-4 tablet:space-x-6 ml-4">
+          <nav className="hidden tablet:flex items-center space-x-4 tablet:space-x-6 ml-4">
+            {links.map(({ to, label }) => (
+              <Link key={to} to={to} className="hover:text-accent-bluegray">
+                {label}
+              </Link>
+            ))}
             {user && (
               <span
                 className="max-w-[9rem] truncate text-text-secondary"
@@ -27,7 +37,7 @@ const Header = () => {
               </span>
             )}
             <LoginButton />
-          </div>
+          </nav>
           <button
             className="ml-2 tablet:hidden p-2 text-text-secondary"
             onClick={() => setMobileOpen(!mobileOpen)}
@@ -38,6 +48,11 @@ const Header = () => {
         </div>
         {mobileOpen && (
           <div className="absolute right-4 top-full mt-2 w-40 bg-surface shadow-lg rounded p-4 flex flex-col space-y-3 tablet:hidden">
+            {links.map(({ to, label }) => (
+              <Link key={to} to={to} onClick={() => setMobileOpen(false)} className="hover:text-accent-bluegray">
+                {label}
+              </Link>
+            ))}
             {user && (
               <span className="text-text-secondary truncate" title={user.email || undefined}>
                 {user.email}
