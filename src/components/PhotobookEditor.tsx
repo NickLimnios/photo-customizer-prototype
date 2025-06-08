@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Canvas, FabricImage, Rect } from "fabric";
+import { ChevronDown } from "lucide-react";
 
 export type LayoutOption =
   | "no-placeholders"
@@ -17,21 +18,42 @@ export default function PhotobookEditor() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [canvas, setCanvas] = useState<Canvas>();
+  const [size, setSize] = useState({ width: 600, height: 400 });
   const [layout, setLayout] = useState<LayoutOption>("one-placeholder");
   const [images, setImages] = useState<UploadedImage[]>([]);
   const [placeholders, setPlaceholders] = useState<Rect[]>([]);
 
   useEffect(() => {
+    const updateSize = () => {
+      if (containerRef.current) {
+        const w = containerRef.current.clientWidth;
+        const h = Math.round((w * 2) / 3);
+        setSize({ width: w, height: h });
+      }
+    };
+    updateSize();
+    window.addEventListener("resize", updateSize);
+    return () => window.removeEventListener("resize", updateSize);
+  }, []);
+
+  useEffect(() => {
     if (canvasRef.current && !canvas) {
       const c = new Canvas(canvasRef.current, {
-        width: 600,
-        height: 400,
+        width: size.width,
+        height: size.height,
         backgroundColor: "#fff",
         preserveObjectStacking: true,
       });
       setCanvas(c);
     }
-  }, [canvas]);
+  }, [canvas, size]);
+
+  useEffect(() => {
+    if (canvas) {
+      canvas.setWidth(size.width);
+      canvas.setHeight(size.height);
+    }
+  }, [size, canvas]);
 
   useEffect(() => {
     if (!canvas) return;
@@ -95,7 +117,7 @@ export default function PhotobookEditor() {
 
     setPlaceholders(newPlaceholders);
     canvas.renderAll();
-  }, [canvas, layout]);
+  }, [canvas, layout, size]);
 
   const handleAddImage = (file: File) => {
     const reader = new FileReader();
@@ -167,45 +189,51 @@ export default function PhotobookEditor() {
 
   return (
     <div className="space-y-4 p-4">
-      <div className="flex space-x-2 items-center">
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => e.target.files && handleAddImage(e.target.files[0])}
-          className="border px-2 py-1"
-        />
-        <select
-          value={layout}
-          onChange={(e) => setLayout(e.target.value as LayoutOption)}
-          className="border p-1"
-        >
-          <option value="one-placeholder">One Placeholder</option>
-          <option value="two-placeholders">Two Placeholders</option>
-          <option value="three-placeholders">Three Placeholders</option>
-          <option value="four-placeholders">Four Placeholders</option>
-          <option value="no-placeholders">No Placeholders</option>
-        </select>
+      <div className="flex flex-wrap gap-2 items-center">
+        <label className="cursor-pointer inline-flex items-center bg-accent-bluegray text-white rounded px-4 py-2 shadow hover:bg-accent-bluegray/80">
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => e.target.files && handleAddImage(e.target.files[0])}
+            className="hidden"
+          />
+          Upload Image
+        </label>
+        <div className="relative inline-block">
+          <select
+            value={layout}
+            onChange={(e) => setLayout(e.target.value as LayoutOption)}
+            className="appearance-none border rounded px-3 py-2 pr-8 bg-surface shadow focus:outline-none focus:ring-2 focus:ring-accent-bluegray"
+          >
+            <option value="one-placeholder">One Placeholder</option>
+            <option value="two-placeholders">Two Placeholders</option>
+            <option value="three-placeholders">Three Placeholders</option>
+            <option value="four-placeholders">Four Placeholders</option>
+            <option value="no-placeholders">No Placeholders</option>
+          </select>
+          <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 text-text-secondary" />
+        </div>
       </div>
 
-      <div className="flex space-x-2 overflow-x-auto">
+      <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 max-h-32 overflow-y-auto">
         {images.map((img) => (
           <img
             key={img.id}
             src={img.url}
             draggable
             onDragStart={(e) => onDragStart(e, img.id)}
-            className="h-20 w-20 object-cover border cursor-move"
+            className="w-full h-24 object-cover border rounded cursor-move"
           />
         ))}
       </div>
 
       <div
         ref={containerRef}
-        className="border inline-block relative"
+        className="border inline-block relative w-full"
         onDrop={handleDrop}
         onDragOver={(e) => e.preventDefault()}
       >
-        <canvas ref={canvasRef} className="pointer-events-auto" tabIndex={0} />
+        <canvas ref={canvasRef} className="pointer-events-auto w-full h-full" tabIndex={0} />
       </div>
     </div>
   );
