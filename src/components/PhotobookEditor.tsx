@@ -217,20 +217,6 @@ export default function PhotobookEditor() {
           />
           Upload Images
         </label>
-        <div className="relative inline-block">
-          <select
-            value={layout}
-            onChange={(e) => setLayout(e.target.value as LayoutOption)}
-            className="appearance-none border rounded px-3 py-2 pr-8 bg-surface shadow focus:outline-none focus:ring-2 focus:ring-accent-bluegray w-full"
-          >
-            <option value="one-placeholder">One Placeholder</option>
-            <option value="two-placeholders">Two Placeholders</option>
-            <option value="three-placeholders">Three Placeholders</option>
-            <option value="four-placeholders">Four Placeholders</option>
-            <option value="no-placeholders">No Placeholders</option>
-          </select>
-          <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 text-text-secondary" />
-        </div>
 
         <div className="grid grid-cols-2 tablet:grid-cols-3 gap-2 max-h-64 overflow-y-auto">
           {images.map((img) => (
@@ -245,14 +231,31 @@ export default function PhotobookEditor() {
         </div>
       </div>
 
-      <div className="flex-1 flex items-center justify-center">
-        <div
-          ref={containerRef}
-          className="border relative w-full h-full"
-          onDrop={handleDrop}
-          onDragOver={(e) => e.preventDefault()}
-        >
-          <canvas ref={canvasRef} className="pointer-events-auto w-full h-full" tabIndex={0} />
+      <div className="flex-1 flex flex-col space-y-4">
+        <div className="relative inline-block self-start">
+          <select
+            value={layout}
+            onChange={(e) => setLayout(e.target.value as LayoutOption)}
+            className="appearance-none border rounded px-3 py-2 pr-8 bg-surface shadow focus:outline-none focus:ring-2 focus:ring-accent-bluegray w-full"
+          >
+            <option value="one-placeholder">One Placeholder</option>
+            <option value="two-placeholders">Two Placeholders</option>
+            <option value="three-placeholders">Three Placeholders</option>
+            <option value="four-placeholders">Four Placeholders</option>
+            <option value="no-placeholders">No Placeholders</option>
+          </select>
+          <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 text-text-secondary" />
+        </div>
+
+        <div className="flex-1 flex items-center justify-center">
+          <div
+            ref={containerRef}
+            className="border relative w-full"
+            onDrop={handleDrop}
+            onDragOver={(e) => e.preventDefault()}
+          >
+            <canvas ref={canvasRef} className="pointer-events-auto w-full h-full" tabIndex={0} />
+          </div>
         </div>
       </div>
       {uploadStatus.visible && (
