@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import hardCoverPhoto from "../assets/hard-cover-photo-books_2.jpeg";
+import PageLayout from "../Layout/PageLayout";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -9,10 +10,7 @@ const Home = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 tablet:py-12 desktop:py-16">
-      <h1 className="text-3xl font-bold mb-6 text-text-primary">
-        Choose Your Photobook
-      </h1>
+    <PageLayout title="Choose Your Photobook">
       <div className="grid grid-cols-1 sm:grid-cols-2 tablet:grid-cols-3 desktop:grid-cols-4 gap-6">
         <div
           className="bg-surface rounded-lg p-4 shadow-md hover:shadow-lg transform hover:-translate-y-1 transition duration-300 cursor-pointer"
@@ -32,7 +30,7 @@ const Home = () => {
         </div>
         {/* Add more cards as needed */}
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

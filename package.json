@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@cesdk/cesdk-js": "^1.48.1",
     "@tailwindcss/vite": "^4.1.4",
     "firebase": "^11.6.1",
     "lucide-react": "^0.509.0",

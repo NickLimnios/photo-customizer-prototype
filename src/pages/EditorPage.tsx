@@ -1,11 +1,13 @@
-import CreativeEditorSDKComponent from "../components/CreativeEditorSDKComponent";
+import { PhotobookEditorMock } from "../components/PhotobookEditorMock";
+import PageLayout from "../Layout/PageLayout";
 
 const EditorPage = () => {
   return (
-    <div className="w-full h-screen">
-      <h1 className="text-3xl font-bold mb-6">Create Your Photobook</h1>
-      <CreativeEditorSDKComponent />
-    </div>
+    <PageLayout title="Create Your Photobook">
+      <div className="w-full h-screen">
+        <PhotobookEditorMock />
+      </div>
+    </PageLayout>
   );
 };
 
