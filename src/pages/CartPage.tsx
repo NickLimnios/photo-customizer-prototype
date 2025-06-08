@@ -18,7 +18,7 @@ const CartPage = () => {
               <div>
                 <p className="font-medium">{item.name}</p>
                 <p className="text-sm text-gray-600">
-                  ${item.price.toFixed(2)}
+                  {`$${item.price.toFixed(2)}`}
                 </p>
               </div>
               <button
