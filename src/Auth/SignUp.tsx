@@ -1,24 +1,22 @@
 import React, { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase/firebase";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "./AuthContext";
 
 const SignUp: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const { signUp } = useAuth();
+  const navigate = useNavigate();
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      // Signed up successfully
-      const user = userCredential.user;
-      console.log("User signed up:", user);
-    } catch (error) {
-      console.error("Error signing up:", error);
+      setError(null);
+      await signUp(email, password);
+      navigate("/");
+    } catch (err) {
+      setError((err as Error).message);
     }
   };
 
@@ -38,6 +36,7 @@ const SignUp: React.FC = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
+      {error && <p className="text-red-500 text-sm">{error}</p>}
       <button type="submit" className="bg-blue-500 text-white p-2 rounded">
         Sign Up
       </button>

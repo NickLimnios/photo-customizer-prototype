@@ -6,23 +6,26 @@ import { Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import { PhotobookEditorMock } from "./components/PhotobookEditorMock";
 import { CartProvider } from "./Cart/CartProvider";
+import { AuthProvider } from "./Auth/AuthContext";
 import CartPage from "./pages/CartPage";
 
 function App() {
   return (
     <div className="flex flex-col min-h-screen bg-background text-text-primary">
-      <CartProvider>
-        <Header />
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/editor" element={<PhotobookEditorMock />} />
-            <Route path="/cart" element={<CartPage />} />
-            <Route path="/login" element={<LoginPage />} />
-          </Routes>
-        </main>
-        <Footer />
-      </CartProvider>
+      <AuthProvider>
+        <CartProvider>
+          <Header />
+          <main className="flex-grow">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/editor" element={<PhotobookEditorMock />} />
+              <Route path="/cart" element={<CartPage />} />
+              <Route path="/login" element={<LoginPage />} />
+            </Routes>
+          </main>
+          <Footer />
+        </CartProvider>
+      </AuthProvider>
     </div>
   );
 }
