@@ -6,8 +6,10 @@ const LoginPage: React.FC = () => {
   const [isSignIn, setIsSignIn] = useState(true);
 
   return (
-    <PageLayout title={isSignIn ? "Sign In to Photobook" : "Create a Photobook Account"}>
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <PageLayout
+      title={isSignIn ? "Sign In to Photobook" : "Create a Photobook Account"}
+    >
+      <div className="flex flex-col items-center bg-gray-100">
         <div className="bg-white p-4 tablet:p-8 rounded shadow-md w-full max-w-sm tablet:max-w-md">
           {isSignIn ? <SignIn /> : <SignUp />}
           <p className="mt-4 text-center text-sm text-gray-600">
