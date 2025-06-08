@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import hardCoverPhoto from "../assets/hard-cover-photo-books_2.jpeg";
 import PageLayout from "../Layout/PageLayout";
+import { Card, CardContent, CardTitle, CardDescription } from "../components/ui/card";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -12,22 +13,20 @@ const Home = () => {
   return (
     <PageLayout title="Choose Your Photobook">
       <div className="grid grid-cols-1 sm:grid-cols-2 tablet:grid-cols-3 desktop:grid-cols-4 gap-6">
-        <div
-          className="bg-surface rounded-lg p-4 shadow-md hover:shadow-lg transform hover:-translate-y-1 transition duration-300 cursor-pointer"
+        <Card
+          className="hover:shadow-lg transform hover:-translate-y-1 transition duration-300 cursor-pointer"
           onClick={handleCardSelect}
         >
           <img
             src={hardCoverPhoto}
             alt="Card Preview"
-            className="w-full h-48 object-cover mb-4 rounded"
+            className="w-full h-48 object-cover rounded-t-lg"
           />
-          <h2 className="text-xl font-semibold text-text-primary">
-            Classic Layout
-          </h2>
-          <p className="text-text-secondary">
-            A timeless design for your memories.
-          </p>
-        </div>
+          <CardContent>
+            <CardTitle>Classic Layout</CardTitle>
+            <CardDescription>A timeless design for your memories.</CardDescription>
+          </CardContent>
+        </Card>
         {/* Add more cards as needed */}
       </div>
     </PageLayout>

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
+import { Input } from "../components/ui/input";
+import { Button } from "../components/ui/button";
 
 const SignUp: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -22,24 +24,22 @@ const SignUp: React.FC = () => {
 
   return (
     <form onSubmit={handleSignUp} className="flex flex-col space-y-4">
-      <input
+      <Input
         type="email"
         placeholder="Email"
-        className="p-2 border border-gray-300 rounded"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-      <input
+      <Input
         type="password"
         placeholder="Password"
-        className="p-2 border border-gray-300 rounded"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
       {error && <p className="text-red-500 text-sm">{error}</p>}
-      <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+      <Button type="submit" className="bg-blue-500 hover:bg-blue-600">
         Sign Up
-      </button>
+      </Button>
     </form>
   );
 };
