@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { Canvas, FabricImage, Rect } from "fabric";
 
 export type LayoutOption =
   | "no-placeholders"
@@ -97,7 +96,8 @@ export default function PhotobookEditor() {
     canvas.renderAll();
   }, [canvas, layout]);
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+        canvas.requestRenderAll();
+      <div onDrop={onDrop} onDragOver={onDragOver}>
     e.preventDefault();
     const id = e.dataTransfer?.getData("text/plain");
     const img = images.find((i) => i.id === id);
