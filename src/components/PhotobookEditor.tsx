@@ -247,14 +247,18 @@ export default function PhotobookEditor() {
           <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 text-text-secondary" />
         </div>
 
-        <div className="flex-1 flex items-center justify-center">
+        <div className="flex items-center justify-center">
           <div
             ref={containerRef}
             className="border relative w-full"
             onDrop={handleDrop}
             onDragOver={(e) => e.preventDefault()}
           >
-            <canvas ref={canvasRef} className="pointer-events-auto w-full h-full" tabIndex={0} />
+            <canvas
+              ref={canvasRef}
+              className="pointer-events-auto w-full h-full"
+              tabIndex={0}
+            />
           </div>
         </div>
       </div>
