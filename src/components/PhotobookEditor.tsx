@@ -15,6 +15,7 @@ type UploadedImage = {
 
 export default function PhotobookEditor() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const [canvas, setCanvas] = useState<Canvas>();
   const [layout, setLayout] = useState<LayoutOption>("one-placeholder");
   const [images, setImages] = useState<UploadedImage[]>([]);
@@ -100,7 +101,7 @@ export default function PhotobookEditor() {
     e.dataTransfer.setData("text/plain", id);
   };
 
-  const onDrop = (e: React.DragEvent<HTMLCanvasElement>) => {
+  const onDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     if (!canvas) return;
     const id = e.dataTransfer.getData("text/plain");
@@ -109,9 +110,12 @@ export default function PhotobookEditor() {
 
     FabricImage.fromURL(img.url)
       .then((image) => {
+        const rect = canvas.upperCanvasEl.getBoundingClientRect();
+        const left = e.clientX - rect.left;
+        const top = e.clientY - rect.top;
         image.set({
-          left: e.nativeEvent.offsetX,
-          top: e.nativeEvent.offsetY,
+          left,
+          top,
           originX: "center",
           originY: "center",
         });
@@ -124,7 +128,7 @@ export default function PhotobookEditor() {
       });
   };
 
-  const onDragOver = (e: React.DragEvent<HTMLCanvasElement>) => {
+  const onDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
   };
 
@@ -151,7 +155,9 @@ export default function PhotobookEditor() {
           />
         ))}
       </div>
-      <canvas ref={canvasRef} onDrop={onDrop} onDragOver={onDragOver} className="border" />
+      <div ref={containerRef} onDrop={onDrop} onDragOver={onDragOver}>
+        <canvas ref={canvasRef} className="border" />
+      </div>
     </div>
   );
 }
