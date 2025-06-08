@@ -2,7 +2,8 @@
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 It includes a mobile‑first layout powered by Tailwind CSS with responsive
-styles for mobile, tablet and desktop screens.
+styles for mobile, tablet and desktop screens. On small screens, navigation
+collapses into a burger menu for easier access.
 
 Currently, two official plugins are available:
 
