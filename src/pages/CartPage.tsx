@@ -4,7 +4,7 @@ const CartPage = () => {
   const { state, dispatch } = useCart();
 
   return (
-    <div className="mt-6 max-w-md w-full bg-white shadow-lg rounded-lg p-4">
+    <div className="mt-6 tablet:mt-8 desktop:mt-10 max-w-sm tablet:max-w-md desktop:max-w-lg w-full bg-white shadow-lg rounded-lg p-4">
       <h2 className="text-xl font-semibold mb-4">Cart</h2>
       {state.items.length === 0 ? (
         <p className="text-gray-500">Your cart is empty.</p>

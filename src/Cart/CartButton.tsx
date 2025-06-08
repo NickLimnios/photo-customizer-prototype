@@ -3,7 +3,10 @@ import { ShoppingCart } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useCart } from "./useCart";
 
-export const CartButton = () => {
+interface Props {
+  onClick?: () => void;
+}
+export const CartButton: React.FC<Props> = ({ onClick }) => {
   const { state } = useCart();
   const itemCount = state.items.length;
 
@@ -22,6 +25,7 @@ export const CartButton = () => {
   return (
     <Link
       to="/cart"
+      onClick={onClick}
       className="group relative flex items-center text-text-secondary hover:text-accent-bluegray"
     >
       <div className="relative">

@@ -1,6 +1,13 @@
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+It includes a mobile‑first layout powered by Tailwind CSS with responsive
+styles for mobile, tablet and desktop screens. The header contains links to the
+home and photobook editor pages and a cart button that is always visible.
+Navigation collapses into a burger menu on screens narrower than the tablet
+breakpoint (768&nbsp;px). On tablet and desktop screens those links, the
+logged‑in user and the login/logout option appear inline on the header instead
+of inside the burger. Long user names are truncated to prevent overflow.
 
 Currently, two official plugins are available:
 
