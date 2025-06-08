@@ -1,24 +1,22 @@
 import React, { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase/firebase";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "./AuthContext";
 
 const SignIn: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const { signIn } = useAuth();
+  const navigate = useNavigate();
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      // Signed in successfully
-      const user = userCredential.user;
-      console.log("User signed in:", user);
-    } catch (error) {
-      console.error("Error signing in:", error);
+      setError(null);
+      await signIn(email, password);
+      navigate("/");
+    } catch (err) {
+      setError((err as Error).message);
     }
   };
 
@@ -38,6 +36,7 @@ const SignIn: React.FC = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
+      {error && <p className="text-red-500 text-sm">{error}</p>}
       <button type="submit" className="bg-green-500 text-white p-2 rounded">
         Sign In
       </button>
