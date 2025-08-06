@@ -8,6 +8,7 @@ import { AuthProvider } from "./Auth/AuthContext";
 import CartPage from "./pages/CartPage";
 import MainContent from "./Layout/MainContent";
 import EditorPage from "./pages/EditorPage";
+import Sidebar from "./Layout/Sidebar";
 
 function App() {
   return (
@@ -15,14 +16,17 @@ function App() {
       <AuthProvider>
         <CartProvider>
           <Header />
-          <MainContent>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/editor" element={<EditorPage />} />
-              <Route path="/cart" element={<CartPage />} />
-              <Route path="/login" element={<LoginPage />} />
-            </Routes>
-          </MainContent>
+          <div className="flex flex-1">
+            <Sidebar />
+            <MainContent>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/editor" element={<EditorPage />} />
+                <Route path="/cart" element={<CartPage />} />
+                <Route path="/login" element={<LoginPage />} />
+              </Routes>
+            </MainContent>
+          </div>
           <Footer />
         </CartProvider>
       </AuthProvider>
