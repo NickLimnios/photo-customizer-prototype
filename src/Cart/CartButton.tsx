@@ -1,10 +1,10 @@
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ShoppingCart } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
 
-import { useCart } from "./useCart";
 import { Button, type ButtonProps } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { getCart } from "@/lib/cart";
 
 interface Props {
   onClick?: () => void;
@@ -13,17 +13,33 @@ interface Props {
   className?: string;
 }
 
+const getItemCount = () =>
+  getCart().reduce((total, item) => total + item.qty, 0);
+
 export const CartButton: React.FC<Props> = ({
   onClick,
   variant = "default",
   size = "sm",
   className,
 }) => {
-  const { state } = useCart();
-  const itemCount = state.items.length;
-
-  const prevCount = useRef(0);
+  const [itemCount, setItemCount] = useState(() => getItemCount());
+  const prevCount = useRef(itemCount);
   const [animate, setAnimate] = useState(false);
+
+  useEffect(() => {
+    const sync = () => setItemCount(getItemCount());
+    const handleCartUpdated = (_event: Event) => sync();
+    const handleStorage = (_event: StorageEvent) => sync();
+
+    sync();
+    window.addEventListener("cart:updated", handleCartUpdated);
+    window.addEventListener("storage", handleStorage);
+
+    return () => {
+      window.removeEventListener("cart:updated", handleCartUpdated);
+      window.removeEventListener("storage", handleStorage);
+    };
+  }, []);
 
   useEffect(() => {
     if (prevCount.current !== itemCount && itemCount > 0) {
