@@ -591,7 +591,7 @@ export default function PhotobookEditorPro() {
     <div className="flex h-full p-4 gap-4">
       {/* Left: Assets panel */}
       <div className="w-56 tablet:w-72 space-y-4">
-        <label className="cursor-pointer flex items-center justify-center bg-accent-bluegray text-white rounded px-4 py-2 shadow hover:bg-accent-bluegray/80">
+        <label className="cursor-pointer flex items-center justify-center bg-primary text-white rounded px-4 py-2 shadow hover:bg-primary/80">
           <input
             type="file"
             accept="image/*"
@@ -618,13 +618,13 @@ export default function PhotobookEditorPro() {
         <div className="space-y-2 pt-4 border-t">
           <button
             onClick={addTextBox}
-            className="w-full border rounded px-3 py-2 bg-surface shadow hover:bg-surface/80"
+            className="w-full border rounded px-3 py-2 bg-card shadow hover:bg-card/80"
           >
             Add Text
           </button>
           <button
             onClick={removeActive}
-            className="w-full border rounded px-3 py-2 bg-surface shadow flex items-center justify-center gap-2"
+            className="w-full border rounded px-3 py-2 bg-card shadow flex items-center justify-center gap-2"
           >
             <Trash2 className="h-4 w-4" />
             Delete Selected
@@ -632,13 +632,13 @@ export default function PhotobookEditorPro() {
           <div className="flex gap-2">
             <button
               onClick={bringToFront}
-              className="flex-1 border rounded px-3 py-2 bg-surface shadow"
+              className="flex-1 border rounded px-3 py-2 bg-card shadow"
             >
               Front
             </button>
             <button
               onClick={sendToBack}
-              className="flex-1 border rounded px-3 py-2 bg-surface shadow"
+              className="flex-1 border rounded px-3 py-2 bg-card shadow"
             >
               Back
             </button>
@@ -646,14 +646,14 @@ export default function PhotobookEditorPro() {
           <div className="flex gap-2">
             <button
               onClick={rotateLeft}
-              className="flex-1 border rounded px-3 py-2 bg-surface shadow flex items-center justify-center gap-2"
+              className="flex-1 border rounded px-3 py-2 bg-card shadow flex items-center justify-center gap-2"
             >
               <RotateCcw className="h-4 w-4" />
               90°
             </button>
             <button
               onClick={rotateRight}
-              className="flex-1 border rounded px-3 py-2 bg-surface shadow flex items-center justify-center gap-2"
+              className="flex-1 border rounded px-3 py-2 bg-card shadow flex items-center justify-center gap-2"
             >
               <RotateCw className="h-4 w-4" />
               90°
@@ -685,7 +685,7 @@ export default function PhotobookEditorPro() {
             <select
               value={layout}
               onChange={(e) => setLayout(e.target.value as LayoutOption)}
-              className="appearance-none border rounded px-3 py-2 pr-8 bg-surface shadow focus:outline-none focus:ring-2 focus:ring-accent-bluegray"
+              className="appearance-none border rounded px-3 py-2 pr-8 bg-card shadow focus:outline-none focus:ring-2 focus:ring-primary"
             >
               <option value="one-placeholder">One Placeholder</option>
               <option value="two-placeholders">Two Placeholders</option>
@@ -693,7 +693,7 @@ export default function PhotobookEditorPro() {
               <option value="four-placeholders">Four Placeholders</option>
               <option value="no-placeholders">No Placeholders</option>
             </select>
-            <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 text-text-secondary" />
+            <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           </div>
 
           <div className="flex items-center gap-2">
@@ -715,34 +715,34 @@ export default function PhotobookEditorPro() {
 
           <div className="ml-auto flex gap-2">
             <button
-              className="border rounded px-3 py-2 bg-surface shadow flex items-center gap-2"
+              className="border rounded px-3 py-2 bg-card shadow flex items-center gap-2"
               onClick={undo}
             >
               <Undo2 className="h-4 w-4" />
               Undo
             </button>
             <button
-              className="border rounded px-3 py-2 bg-surface shadow flex items-center gap-2"
+              className="border rounded px-3 py-2 bg-card shadow flex items-center gap-2"
               onClick={redo}
             >
               <Redo2 className="h-4 w-4" />
               Redo
             </button>
             <button
-              className="border rounded px-3 py-2 bg-surface shadow flex items-center gap-2"
+              className="border rounded px-3 py-2 bg-card shadow flex items-center gap-2"
               onClick={saveProject}
             >
               <Save className="h-4 w-4" />
               Save
             </button>
             <button
-              className="border rounded px-3 py-2 bg-surface shadow"
+              className="border rounded px-3 py-2 bg-card shadow"
               onClick={loadProject}
             >
               Load
             </button>
             <button
-              className="border rounded px-3 py-2 bg-surface shadow flex items-center gap-2"
+              className="border rounded px-3 py-2 bg-card shadow flex items-center gap-2"
               onClick={exportPNG}
             >
               <Download className="h-4 w-4" />
@@ -773,7 +773,7 @@ export default function PhotobookEditorPro() {
               saveCanvasToPage();
               setPageIndex(Math.max(0, pageIndex - 1));
             }}
-            className="border rounded px-3 py-2 bg-surface shadow flex items-center gap-2"
+            className="border rounded px-3 py-2 bg-card shadow flex items-center gap-2"
           >
             <ChevronLeft className="h-4 w-4" />
             Prev
@@ -784,7 +784,7 @@ export default function PhotobookEditorPro() {
               saveCanvasToPage();
               setPageIndex(Math.min(pages.length - 1, pageIndex + 1));
             }}
-            className="border rounded px-3 py-2 bg-surface shadow flex items-center gap-2"
+            className="border rounded px-3 py-2 bg-card shadow flex items-center gap-2"
           >
             Next
             <ChevronRight className="h-4 w-4" />
@@ -793,28 +793,28 @@ export default function PhotobookEditorPro() {
           <div className="ml-4 flex gap-2">
             <button
               onClick={addPage}
-              className="border rounded px-3 py-2 bg-surface shadow flex items-center gap-2"
+              className="border rounded px-3 py-2 bg-card shadow flex items-center gap-2"
             >
               <FilePlus2 className="h-4 w-4" />
               Add Page
             </button>
             <button
               onClick={duplicatePage}
-              className="border rounded px-3 py-2 bg-surface shadow flex items-center gap-2"
+              className="border rounded px-3 py-2 bg-card shadow flex items-center gap-2"
             >
               <Copy className="h-4 w-4" />
               Duplicate
             </button>
             <button
               onClick={deletePage}
-              className="border rounded px-3 py-2 bg-surface shadow flex items-center gap-2"
+              className="border rounded px-3 py-2 bg-card shadow flex items-center gap-2"
             >
               <Trash2 className="h-4 w-4" />
               Delete
             </button>
           </div>
 
-          <div className="ml-auto text-sm text-text-secondary">
+          <div className="ml-auto text-sm text-muted-foreground">
             Pages: {pages.length}
           </div>
         </div>
@@ -822,7 +822,7 @@ export default function PhotobookEditorPro() {
 
       {/* Right: contextual help */}
       <div className="w-56 space-y-3">
-        <div className="border rounded p-3 bg-surface shadow">
+        <div className="border rounded p-3 bg-card shadow">
           <div className="font-medium mb-1">Tips</div>
           <ul className="list-disc ml-4 text-sm space-y-1">
             <li>Drag an image into a dashed frame to place it.</li>

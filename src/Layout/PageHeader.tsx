@@ -1,11 +1,15 @@
-import React from "react";
+import type { FC, ReactNode } from "react";
 
 interface PageHeaderProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-const PageHeader: React.FC<PageHeaderProps> = ({ children }) => (
-  <h1 className="text-3xl font-bold mb-6 text-text-primary">{children}</h1>
+const PageHeader: FC<PageHeaderProps> = ({ children }) => (
+  <div className="space-y-2">
+    <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+      {children}
+    </h1>
+  </div>
 );
 
 export default PageHeader;

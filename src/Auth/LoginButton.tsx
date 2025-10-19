@@ -1,40 +1,51 @@
-import React from "react";
+import type { FC } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { LogIn, LogOut } from "lucide-react";
+
 import { useAuth } from "./AuthContext";
+import { Button, type ButtonProps } from "@/components/ui/button";
 
 interface Props {
   onClick?: () => void;
+  variant?: ButtonProps["variant"];
+  size?: ButtonProps["size"];
+  className?: string;
 }
 
-export const LoginButton: React.FC<Props> = ({ onClick }) => {
+export const LoginButton: FC<Props> = ({
+  onClick,
+  variant = "ghost",
+  size = "sm",
+  className,
+}) => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
 
   if (user) {
     return (
-      <button
+      <Button
+        type="button"
+        variant={variant}
+        size={size}
+        className={className}
         onClick={async () => {
           await signOut();
           navigate("/");
           onClick?.();
         }}
-        className="flex items-center text-text-secondary hover:text-accent-bluegray"
       >
-        <LogOut className="w-5 h-5 mr-1" />
-        <span>Logout</span>
-      </button>
+        <LogOut className="h-4 w-4" />
+        <span>Sign out</span>
+      </Button>
     );
   }
 
   return (
-    <Link
-      to="/login"
-      onClick={onClick}
-      className="flex items-center text-text-secondary hover:text-accent-bluegray"
-    >
-      <LogIn className="w-5 h-5 mr-1" />
-      <span>Login</span>
-    </Link>
+    <Button asChild variant={variant} size={size} className={className}>
+      <Link to="/login" onClick={onClick} className="flex items-center gap-2">
+        <LogIn className="h-4 w-4" />
+        <span>Log in</span>
+      </Link>
+    </Button>
   );
 };

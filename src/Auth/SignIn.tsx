@@ -1,16 +1,20 @@
-import React, { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "./AuthContext";
 
-const SignIn: React.FC = () => {
+import { useAuth } from "./AuthContext";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+
+const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const { signIn } = useAuth();
   const navigate = useNavigate();
 
-  const handleSignIn = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSignIn = async (event: FormEvent) => {
+    event.preventDefault();
     try {
       setError(null);
       await signIn(email, password);
@@ -21,25 +25,35 @@ const SignIn: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSignIn} className="flex flex-col space-y-4">
-      <input
-        type="email"
-        placeholder="Email"
-        className="p-2 border border-gray-300 rounded"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        className="p-2 border border-gray-300 rounded"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      {error && <p className="text-red-500 text-sm">{error}</p>}
-      <button type="submit" className="bg-green-500 text-white p-2 rounded">
-        Sign In
-      </button>
+    <form onSubmit={handleSignIn} className="space-y-4">
+      <div className="space-y-2">
+        <Label htmlFor="signin-email">Email</Label>
+        <Input
+          id="signin-email"
+          type="email"
+          placeholder="you@example.com"
+          value={email}
+          autoComplete="email"
+          onChange={(event) => setEmail(event.target.value)}
+          required
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="signin-password">Password</Label>
+        <Input
+          id="signin-password"
+          type="password"
+          placeholder="••••••••"
+          value={password}
+          autoComplete="current-password"
+          onChange={(event) => setPassword(event.target.value)}
+          required
+        />
+      </div>
+      {error && <p className="text-sm text-destructive">{error}</p>}
+      <Button type="submit" className="w-full">
+        Sign in
+      </Button>
     </form>
   );
 };

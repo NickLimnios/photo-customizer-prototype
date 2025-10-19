@@ -1,11 +1,11 @@
-import React from "react";
+import type { FC, ReactNode } from "react";
 
 interface MainContentProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-const MainContent: React.FC<MainContentProps> = ({ children }) => {
-  return <main className="flex-grow">{children}</main>;
-};
+const MainContent: FC<MainContentProps> = ({ children }) => (
+  <main className="flex-1 bg-background">{children}</main>
+);
 
 export default MainContent;

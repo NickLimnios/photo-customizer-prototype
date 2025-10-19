@@ -1,11 +1,11 @@
-import React from "react";
+import type { FC, ReactNode } from "react";
 
 interface PageBodyProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-const PageBody: React.FC<PageBodyProps> = ({ children }) => (
-  <div className="space-y-4">{children}</div>
+const PageBody: FC<PageBodyProps> = ({ children }) => (
+  <div className="space-y-6 sm:space-y-8">{children}</div>
 );
 
 export default PageBody;
