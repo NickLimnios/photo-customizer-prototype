@@ -1,16 +1,19 @@
-import React from "react";
+import type { FC, ReactNode } from "react";
+
 import PageHeader from "./PageHeader";
 import PageBody from "./PageBody";
 
 interface PageLayoutProps {
-  title: React.ReactNode;
-  children: React.ReactNode;
+  title: ReactNode;
+  children: ReactNode;
 }
 
-const PageLayout: React.FC<PageLayoutProps> = ({ title, children }) => (
-  <div className="max-w-7xl mx-auto px-4 py-8 tablet:py-12 desktop:py-16">
-    <PageHeader>{title}</PageHeader>
-    <PageBody>{children}</PageBody>
+const PageLayout: FC<PageLayoutProps> = ({ title, children }) => (
+  <div className="bg-background py-12 md:py-16">
+    <div className="container max-w-5xl space-y-8">
+      <PageHeader>{title}</PageHeader>
+      <PageBody>{children}</PageBody>
+    </div>
   </div>
 );
 

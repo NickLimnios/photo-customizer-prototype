@@ -1,84 +1,107 @@
-import { Link } from "react-router-dom";
 import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
+
 import { CartButton } from "../Cart/CartButton";
 import { LoginButton } from "../Auth/LoginButton";
 import { useAuth } from "../Auth/AuthContext";
+import { cn } from "@/lib/utils";
 
-//todo: Enable in case we want to add more links
-// const links = [
-//   { label: "Home", to: "/" },
-//   { label: "Create", to: "/editor" },
-// ];
+const navLinks = [
+  { label: "Templates", to: "/templates" },
+  { label: "Editor", to: "/editor" },
+  { label: "Orders", to: "/orders" },
+];
 
 const Header = () => {
   const { user } = useAuth();
+  const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const isActive = (path: string) =>
+    location.pathname === path || location.pathname.startsWith(`${path}/`);
+
   return (
-    <header className="bg-topbar shadow-md">
-      <div className="max-w-7xl mx-auto px-4 py-2 tablet:py-4 flex items-center relative">
-        <Link to="/" className="text-xl font-bold text-accent-bluegray">
-          Photobook
+    <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-16 items-center justify-between">
+        <Link
+          to="/"
+          className="flex items-center gap-2 text-xl font-extrabold tracking-tight"
+        >
+          <span className="bg-gradient-to-br from-primary to-fuchsia-500 bg-clip-text text-transparent">
+            LumiBook
+          </span>
         </Link>
-        <div className="ml-auto flex items-center">
-          <CartButton />
-          {/* Show menu items inline on desktop (md and up) */}
-          <nav className="hidden md:flex items-center space-x-4 md:space-x-6 ml-4">
-            {/* {links.map(({ to, label }) => (
-              <Link key={to} to={to} className="hover:text-accent-bluegray">
-                {label}
-              </Link>
-            ))} */}
-            {user && (
-              <span
-                className="max-w-[9rem] truncate text-text-secondary"
-                title={user.email || undefined}
-              >
-                {user.email}
-              </span>
-            )}
-            <LoginButton />
-          </nav>
-          {/* Burger menu icon on mobile only */}
+        <nav className="hidden md:flex items-center gap-6 text-sm">
+          {navLinks.map((link) => (
+            <Link
+              key={link.to}
+              to={link.to}
+              className={cn(
+                "transition-colors hover:text-primary",
+                isActive(link.to)
+                  ? "text-primary"
+                  : "text-muted-foreground",
+              )}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+        <div className="flex items-center gap-2">
+          {user?.email && (
+            <span className="hidden md:inline text-sm text-muted-foreground">
+              {user.email}
+            </span>
+          )}
+          <LoginButton className="hidden sm:inline-flex" />
+          <CartButton className="hidden sm:inline-flex" />
           <button
-            className="ml-2 md:hidden p-2 text-text-secondary"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle menu"
+            type="button"
+            onClick={() => setMobileOpen((prev) => !prev)}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-background text-foreground transition-colors hover:bg-accent hover:text-accent-foreground md:hidden"
+            aria-label="Toggle navigation"
           >
-            {mobileOpen ? (
-              <X className="w-6 h-6" />
-            ) : (
-              <Menu className="w-6 h-6" />
-            )}
+            {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
         </div>
-
-        {/* Mobile menu dropdown */}
-        {mobileOpen && (
-          <div className="absolute right-4 top-full mt-2 w-40 bg-surface shadow-lg rounded p-4 flex flex-col space-y-3 md:hidden">
-            {/* {links.map(({ to, label }) => (
+      </div>
+      {mobileOpen && (
+        <div className="border-t bg-background md:hidden">
+          <div className="container flex flex-col gap-4 py-4 text-sm">
+            {navLinks.map((link) => (
               <Link
-                key={to}
-                to={to}
+                key={link.to}
+                to={link.to}
                 onClick={() => setMobileOpen(false)}
-                className="hover:text-accent-bluegray"
+                className={cn(
+                  "font-medium transition-colors hover:text-primary",
+                  isActive(link.to)
+                    ? "text-primary"
+                    : "text-muted-foreground",
+                )}
               >
-                {label}
+                {link.label}
               </Link>
-            ))} */}
-            {user && (
-              <span
-                className="text-text-secondary truncate"
-                title={user.email || undefined}
-              >
-                {user.email}
+            ))}
+            {user?.email && (
+              <span className="text-xs uppercase tracking-wide text-muted-foreground">
+                Signed in as {user.email}
               </span>
             )}
-            <LoginButton onClick={() => setMobileOpen(false)} />
+            <LoginButton
+              variant="ghost"
+              className="justify-start"
+              onClick={() => setMobileOpen(false)}
+            />
+            <CartButton
+              variant="outline"
+              className="justify-start"
+              onClick={() => setMobileOpen(false)}
+            />
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </header>
   );
 };
